@@ -126,6 +126,7 @@ GameManager.prototype.move = function (direction) {
           if (merged.value === 2048) self.over = true;
         } else {
           self.moveTile(tile, positions.farthest);
+        }
 
         if (!self.positionsEqual(cell, tile)) {
           moved = true; // The tile moved from its original cell!
