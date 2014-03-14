@@ -22,7 +22,7 @@ GameManager.prototype.restart = function () {
 GameManager.prototype.setup = function () {
   this.grid         = new Grid(this.size);
 
-  this.score        = 0;
+  this.score        = 1024;
   this.over         = false;
   this.won          = false;
 
@@ -52,7 +52,7 @@ GameManager.prototype.addRandomTile = function () {
 
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
-  if (this.scoreManager.get() < this.score) {
+  if (this.scoreManager.get() > this.score) {
     this.scoreManager.set(this.score);
   }
 
@@ -120,13 +120,12 @@ GameManager.prototype.move = function (direction) {
           tile.updatePosition(positions.next);
 
           // Update the score
-          self.score += merged.value;
+          if(2048/merged.value<self.score)self.score=2048/merged.value;
 
           // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true;
+          if (merged.value === 2048) self.over = true;
         } else {
           self.moveTile(tile, positions.farthest);
-        }
 
         if (!self.positionsEqual(cell, tile)) {
           moved = true; // The tile moved from its original cell!
@@ -139,7 +138,7 @@ GameManager.prototype.move = function (direction) {
     this.addRandomTile();
 
     if (!this.movesAvailable()) {
-      this.over = true; // Game over!
+      this.won = true; // Game over!
     }
 
     this.actuate();
